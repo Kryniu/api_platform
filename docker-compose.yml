@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  symfony:
+    build:
+      context: .
+    depends_on:
+      - postgres
+      - redis
+      - rabbit
+    ports:
+      - ${DOCKER_HOST_SYMFONY_PORT:-80}:80
+    volumes:
+      - .:/symfony
+  postgres:
+    image: postgres:13.1
+    ports:
+      - ${DOCKER_HOST_POSTGRES_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_DB}
+  redis:
+    image: redis:6.0.10
+    ports:
+      - ${DOCKER_HOST_REDIS_PORT:-6379}:6379
+  rabbit:
+    image: rabbitmq:3.8.3-management
+    ports:
+      - ${DOCKER_HOST_RABBIT_PORT:-15672}:15672
