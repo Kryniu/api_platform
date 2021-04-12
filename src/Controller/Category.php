@@ -5,7 +5,6 @@ namespace App\Controller;
 
 
 use App\Form\CategoryAddType;
-use App\Service\Product\ProductService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,13 +35,6 @@ class Category extends AbstractController
 
         return $this->render('form.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    public function listWithCategories(ProductService $productService): Response
-    {
-        return $this->render('list.html.twig', [
-            'results' => $productService->getListWithCategories(),
         ]);
     }
 }
