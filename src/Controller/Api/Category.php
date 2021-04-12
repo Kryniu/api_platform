@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 use App\Service\Category\CategoryService;
 use App\Util\Api;
 use Exception;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Annotations as OA;
@@ -39,13 +40,13 @@ class Category extends Api
      *     @OA\Schema(type="string")
      * )
      */
-    public function add(Request $request, CategoryService $categoryService)
+    public function add(Request $request, CategoryService $categoryService): JsonResponse
     {
         try {
             $categoryService->addNew($request);
-            $this->getSuccessResponse('Add new category');
+            return $this->getSuccessResponse('Add new category');
         } catch (Exception $exception) {
-            $this->errorResponse($exception);
+            return $this->errorResponse($exception);
         }
     }
 }

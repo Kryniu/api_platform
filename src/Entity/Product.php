@@ -3,9 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -21,11 +20,22 @@ class Product
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 20,
+     *      minMessage = "Name must be at least {{ limit }}",
+     *      maxMessage = "Name cannot be longer than {{ limit }}"
+     * )
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=4, nullable=true)
+     * @Assert\Regex(
+     *     pattern="/[A-J]{1}[\d]{3}/",
+     *     match=false,
+     *     message="Symbol should look like C300, first letter from A-J"
+     * )
      */
     private $symbol;
 
@@ -34,11 +44,6 @@ class Product
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
-
-    public function __construct()
-    {
-        $this->category = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {

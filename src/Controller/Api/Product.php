@@ -57,9 +57,9 @@ class Product extends Api
     {
         try {
             $productService->addNew($request);
-            $this->getSuccessResponse('Add new product');
+            return $this->getSuccessResponse('Add new product');
         } catch (Exception $exception) {
-            $this->errorResponse($exception);
+            return $this->errorResponse($exception);
         }
     }
 
