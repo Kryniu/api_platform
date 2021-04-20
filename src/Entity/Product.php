@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -9,6 +10,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
+#[ApiResource(
+    collectionOperations: [
+        'post' => [
+            'path' => '/product/add',
+            'status' => 200,
+        ],
+        'get' => [
+            'path' => '/products_with_category/all',
+        ]
+    ],
+    itemOperations: [
+        'get',
+    ],
+)]
 class Product
 {
     /**
@@ -16,7 +31,7 @@ class Product
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=20)
@@ -26,24 +41,24 @@ class Product
      *      minMessage = "Name must be at least {{ limit }}",
      *      maxMessage = "Name cannot be longer than {{ limit }}"
      * )
+     * @Assert\NotBlank()
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=4, nullable=true)
-     * @Assert\Regex(
-     *     pattern="/[A-J]{1}[\d]{3}/",
-     *     match=false,
-     *     message="Symbol should look like C300, first letter from A-J"
-     * )
      */
-    private $symbol;
+    #[Assert\Regex(
+        pattern: '/[A-J]{1}[\d]{3}/',
+        message: 'Symbol should look like C300, first letter from A-J'
+    )]
+    private ?string $symbol;
 
     /**
      * @ORM\OneToOne(targetEntity=Category::class, inversedBy="product", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $category;
+    private Category $category;
 
     public function getId(): ?int
     {
@@ -74,7 +89,7 @@ class Product
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): Category
     {
         return $this->category;
     }

@@ -2,13 +2,30 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
+#[ApiResource(
+    collectionOperations: [
+        'post' => [
+                'path' => '/categories/add',
+                'status' => 200,
+            ],
+        ],
+    itemOperations: [
+        'get',
+    ],
+    attributes: [
+        'normalization_context' => ['groups' => ['read']],
+        'denormalization_context' => ['groups' => ['write']],
+    ]
+)]
 class Category
 {
     /**
@@ -16,9 +33,10 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=50)
      * @Assert\Length(
      *      min = 5,
@@ -26,13 +44,14 @@ class Category
      *      minMessage = "Name must be at least {{ limit }}",
      *      maxMessage = "Name cannot be longer than {{ limit }}"
      * )
+     * @Assert\NotBlank()
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\OneToOne(targetEntity=Product::class, mappedBy="category", cascade={"persist", "remove"})
      */
-    private $product;
+    private ?Product $product;
 
     public function getId(): ?int
     {

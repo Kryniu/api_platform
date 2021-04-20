@@ -11,17 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/category")
- */
+#[Route('/category')]
 class Category extends AbstractController
 {
-
-    /**
-     * @Route("/add")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
+    #[Route('/add')]
     public function add(Request $request, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CategoryAddType::class);
