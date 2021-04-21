@@ -40,11 +40,21 @@ class ProductServiceTest extends TestCase
         $this->assertEquals($productService->getListWithCategories(), []);
     }
 
-    public function testAddNewEmptyValuesReturnException(): void
+    public function testAddNewEmptyNameReturnException(): void
     {
         $this->expectException(\Exception::class);
         $productService = $this->getProductService();
         $this->request->get('name')->willReturn('');
+        $this->request->get('symbol')->willReturn('');
+        $this->request->get('categoryId')->willReturn('');
+        $productService->addNew($this->request->reveal());
+    }
+
+    public function testAddNewEmptySymbolReturnException(): void
+    {
+        $this->expectException(\Exception::class);
+        $productService = $this->getProductService();
+        $this->request->get('name')->willReturn('testName');
         $this->request->get('symbol')->willReturn('');
         $this->request->get('categoryId')->willReturn('');
         $productService->addNew($this->request->reveal());
